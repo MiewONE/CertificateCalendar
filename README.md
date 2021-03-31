@@ -49,3 +49,8 @@
       시험 일정 Url : 
       
 * 토익 : 상공회의소와 동 [토익 시험일정 URL](https://exam.toeic.co.kr/receipt/examSchList.php)
+
+
+## Reference
+
+   [진짜 개발자](https://galid1.tistory.com/729?category=791452) - Spring JPA - JPA를 이용해 Commerce App 만들기 
