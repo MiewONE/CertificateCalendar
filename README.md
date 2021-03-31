@@ -53,4 +53,4 @@
 
 ## Reference
 
-   [진짜 개발자](https://galid1.tistory.com/729?category=791452) - Spring JPA - JPA를 이용해 Commerce App 만들기 
+   [진짜 개발자](https://galid1.tistory.com/729?category=791452) 전준엽님의 Spring JPA - JPA를 이용해 Commerce App 만들기 
