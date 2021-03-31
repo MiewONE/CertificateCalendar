@@ -28,6 +28,7 @@
         applyCount : 신청한 자격증의 수를 나타냅니다.
 
     1.5 Certificate
+    
         id : DB의 식별자
         name : 자격증의 이름을 나타냅니다.
         grade : 등급
