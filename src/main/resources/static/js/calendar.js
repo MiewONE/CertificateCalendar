@@ -1,5 +1,7 @@
 let today = new Date();
-
+let nowData;
+let rawData;
+let conditionData;
 const init = {
     initFn : function()
     {
@@ -24,7 +26,11 @@ const init = {
             <span>
             ${MonthOfFir.getDate()+i}</span></div>`);
         }
-
+        nowData.forEach(ele => {
+            init.callApi(ele.docRegStartDt,ele.docRegEndDt,ele.description,"필기시험 원서접수");
+            init.callApi(ele.docExamStartDt,ele.docExamEndDt,ele.description,"필기시험일");
+            init.callApi(ele.docPassDt,ele.docPassDt,ele.description,"필기시험 합격(예정)자 발표일자");
+        })
         $('.calCell').on('click',function()
         {
             $('#listCertificate').empty();
@@ -37,19 +43,7 @@ const init = {
             }
         });
 
-        $.ajax({
-            url:'/api/certificate',
-            type:'GET',
-            contentType:"application/json;charset=utf-8",
-            dataType:"json",
-        }).done(function(data){
-            console.log(data);
-            data.forEach(ele => {
-                init.callApi(ele.docRegStartDt,ele.docRegEndDt,ele.description,"필기시험 원서접수");
-            })
-        }).fail(function(){
 
-        })
 
     }
     ,
@@ -77,14 +71,16 @@ const init = {
         }
         // if($('#text')) --> 아이템이 너무 많으면 깨질것 같음 처리필요.
         d.forEach(ele => {
-            if($('#'+ele).children('div').length>3)
+            if($('#'+ele).children('div').length>4)
             {
                 $('#'+ele).append('<div class="test" style="visibility:hidden;">'+title+'</div>')
             }else
             if(subtitle)
             {
                 if(subtitle.includes("필기시험 원서접수")>0)
-                    $('#'+ele).append('<div class="test" style="color:white;background:skyblue;">'+title+'</div>')
+                    $('#'+ele).append('<div class="test" style="background:skyblue;">'+title+'</div>')
+                if(subtitle.includes("필기시험일")>0)
+                    $('#'+ele).append('<div class="test" style="background:tomato;">'+title+'</div>')
             }
             else
                 $('#'+ele).append('<div class="test">'+title+'</div>')
@@ -100,9 +96,62 @@ const init = {
         {
             init.nextFun();
         });
+        $('.certifiCondition').on('click',function()
+        {
+            if($(this.id).is(":checked"))
+            {
 
-    }
+            }
+            else{
+                conditionData = nowData;
+                this.initFn();
+            }
+        });
+        $('.wordSeach').on('input',function()
+        {
+            if($('.wordSeach').val())
+            {
+                init.searchConditionInit(rawData,$('.wordSeach').val(),'description');
+            }else
+            {
+                nowData = rawData;
+                init.initFn();
+            }
+        })
+
+    },
+    searchConditionInit:function(data,conditionWord,filter)
+    {
+
+        if(data)
+        {
+            nowData = data.filter(dt => dt[filter].includes(conditionWord)>0);
+            $('.test').remove();
+            nowData.forEach(ele => {
+                init.callApi(ele.docRegStartDt,ele.docRegEndDt,ele.description,"필기시험 원서접수");
+                init.callApi(ele.docExamStartDt,ele.docExamEndDt,ele.description,"필기시험일");
+                init.callApi(ele.docPassDt,ele.docPassDt,ele.description,"필기시험 합격(예정)자 발표일자");
+            })
+        }
+
+
+
+    },
 }
 
-init.initFn();
+$.ajax({
+    url:'/api/certificate',
+    type:'GET',
+    contentType:"application/json;charset=utf-8",
+    dataType:"json",
+}).done(function(data){
+    console.log(data);
+    nowData =data;
+    rawData=data;
+    init.initFn();
+}).fail(function(){
+
+})
+
 init.btnInitFun();
+init.searchConditionInit();
