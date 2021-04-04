@@ -1,8 +1,7 @@
 package com.miewone.certificatecalnendar.domains.certificate.service;
 
-import com.google.gson.Gson;
-import com.miewone.certificatecalnendar.domains.certificate.domain.qnetCertificateEntity;
-import com.miewone.certificatecalnendar.domains.certificate.domain.qnetCertificateRepository;
+import com.miewone.certificatecalnendar.domains.certificate.domain.Qnet.QnetCertificateEntity;
+import com.miewone.certificatecalnendar.domains.certificate.domain.Qnet.QnetCertificateRepository;
 import com.miewone.certificatecalnendar.domains.certificate.dto.CertificateDto;
 import lombok.*;
 import org.json.simple.JSONArray;
@@ -15,13 +14,9 @@ import org.springframework.stereotype.Service;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -29,7 +24,6 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import org.json.simple.JSONObject;
-import org.springframework.web.bind.annotation.RequestBody;
 
 
 @RequiredArgsConstructor
@@ -39,7 +33,7 @@ public class CallApiOfCertificate {
     // 신청가능한 트래픽 100,000 , 일일 트래픽 1000
     // 요청주소 : http://apis.data.go.kr/B490007/qualExamSchd/getQualExamSchdList
     // 서비스 URL : http://apis.data.go.kr/B490007/qualExamSchd
-    private final qnetCertificateRepository qnetcertificaterepository;
+    private final QnetCertificateRepository qnetcertificaterepository;
     @Value("${serviceKey}")
     private String serviceKey;
     private final static Logger LOGGER = Logger.getGlobal();
@@ -121,7 +115,7 @@ public class CallApiOfCertificate {
                     .docRegStartDt(st.get(i++))
                     .build();
 
-            qnetCertificateEntity certificateApply = saveCertificate(dto);
+            QnetCertificateEntity certificateApply = saveCertificate(dto);
             qnetcertificaterepository.save(certificateApply);
 
             i=0;
@@ -129,10 +123,10 @@ public class CallApiOfCertificate {
         }
     }
 
-    private qnetCertificateEntity saveCertificate(CertificateDto dto)
+    private QnetCertificateEntity saveCertificate(CertificateDto dto)
     {
 
-        return qnetCertificateEntity.builder()
+        return QnetCertificateEntity.builder()
                 .implYy(dto.getImplYy())
                 .implSeq(dto.getImplSeq())
                 .qualgbCd(dto.getQualgbCd())

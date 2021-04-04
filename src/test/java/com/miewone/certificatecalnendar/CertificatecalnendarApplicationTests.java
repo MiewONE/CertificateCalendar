@@ -1,7 +1,7 @@
 package com.miewone.certificatecalnendar;
 
-import com.miewone.certificatecalnendar.domains.certificate.domain.qnetCertificateEntity;
 import com.miewone.certificatecalnendar.domains.certificate.service.CallApiOfCertificate;
+import com.miewone.certificatecalnendar.domains.certificate.service.Crawling;
 import org.json.simple.parser.ParseException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,13 +12,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
-import java.util.List;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class CertificatecalnendarApplicationTests {
     @Autowired
     private CallApiOfCertificate callApiOfCertificate;
 
+    @Autowired
+    private Crawling crawlingGet;
     @LocalServerPort
     private int port;
 
@@ -34,7 +35,14 @@ class CertificatecalnendarApplicationTests {
     {
         String url = "http://localhost:"+port+"/api/certificate";
 
-        ResponseEntity<qnetCertificateEntity> entity = client.getForEntity(url,qnetCertificateEntity.class);
+        ResponseEntity<String> entity = client.getForEntity(url,String.class);
 //        List<qnetCertificateEntity> t = entity.getBody();
+    }
+
+    @DisplayName("2. 크롤링 테스트")
+    @Test
+    void crawlingText()
+    {
+        crawlingGet.saveToeicInfo();
     }
 }

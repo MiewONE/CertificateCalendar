@@ -1,4 +1,4 @@
-package com.miewone.certificatecalnendar.domains.certificate.domain;
+package com.miewone.certificatecalnendar.domains.certificate.domain.Qnet;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Table(name = "qnetCertificate")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class qnetCertificateEntity {
+public class QnetCertificateEntity {
 
     @Id @Column(length = 50)
     private String description;
@@ -34,7 +34,7 @@ public class qnetCertificateEntity {
     private String pracPassDt;
 
     @Builder
-    private qnetCertificateEntity(String implYy,int implSeq,String qualgbCd,String qualgbNm,String description,String docRegStartDt,String docRegEndDt,String docExamStartDt,String docExamEndDt,String docPassDt,String pracRegStartDt,String pracRegEndDt,String pracExamStartDt,String pracExamEndDt,String pracPassDt)
+    private QnetCertificateEntity(String implYy, int implSeq, String qualgbCd, String qualgbNm, String description, String docRegStartDt, String docRegEndDt, String docExamStartDt, String docExamEndDt, String docPassDt, String pracRegStartDt, String pracRegEndDt, String pracExamStartDt, String pracExamEndDt, String pracPassDt)
     {
         this.implYy = implYy;
         this.implSeq = implSeq;
