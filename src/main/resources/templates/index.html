@@ -1,65 +1,67 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>달력</title>
-    <link rel="stylesheet" href="/style/calendar.css">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-</head>
-<body>
-<div id="conditionSearch">
-    <div style="margin-bottom: 10px;font-size: 2em;">필터</div>
-    <h4>자격증</h4>
-    <div class="form-check certificationFilter">
-        <input class="form-check-input certifiCondition" type="checkbox" value="" id="qnetCerti" checked>
-        <label class="form-check-label" for="qnetCerti">q-net 자격증</label>
-    </div>
-    <div class="form-check">
-        <input class="form-check-input certifiCondition" type="checkbox" value="" id="toeic" checked>
-        <label class="form-check-label" for="toeic">토익</label>
-    </div>
-    <div class="form-check">
-        <input class="form-check-input certifiCondition" type="checkbox" value="" id="koreanHistory" checked>
-        <label class="form-check-label" for="koreanHistory">한국사</label>
-    </div>
-    <div class="form-check">
-        <input class="form-check-input certifiCondition" type="checkbox" value="" id="korcham" checked>
-        <label class="form-check-label" for="korcham">대한상공 회의소</label>
-    </div>
+    <head>
+        <title>달력</title>
+        <link rel="stylesheet" href="/style/calendar.css">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    </head>
+    <body>
+        <div id="conditionSearch">
+            <div style="margin-bottom: 10px;font-size: 2em;">필터</div>
 
-    <br>
-    <label for="basic-url" class="form-label">단어를 입력하세요</label>
-    <div class="input-group mb-3">
-        <span class="input-group-text" id="basic-addon3">검색</span>
-        <input type="text" class="form-control wordSeach" id="basic-url" aria-describedby="basic-addon3">
-    </div>
+            <h4>자격증</h4>
+            <div id="conditionContainer">
+                <div class="form-check certificationFilter">
+                    <input class="form-check-input certifiCondition" type="checkbox" value="" id="qnetCerti" checked>
+                    <label class="form-check-label" for="qnetCerti">q-net 자격증</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input certifiCondition" type="checkbox" value="" id="toeic" checked>
+                    <label class="form-check-label" for="toeic">토익</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input certifiCondition" type="checkbox" value="" id="koreanHistory" checked>
+                    <label class="form-check-label" for="koreanHistory">한국사</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input certifiCondition" type="checkbox" value="" id="korcham" checked>
+                    <label class="form-check-label" for="korcham">대한상공 회의소</label>
+                </div>
+            </div>
+            <br>
+            <label for="basic-url" class="form-label">단어를 입력하세요</label>
+            <div class="input-group mb-3">
+                <span class="input-group-text" id="basic-addon3">검색</span>
+                <input type="text" class="form-control wordSeach" id="basic-url" aria-describedby="basic-addon3">
+            </div>
 
-</div>
-<div id="calendar">
-    <div id="calendarHeader">
-        <button id ='preBtn' type="button" class="btn btn-info">< 이전 달</button>
-        <div id='calendarT'></div>
-        <button id='nextBtn' type="button" class="btn btn-info">다음 달 ></button>
-    </div>
-    <div id="calendarBody">
+        </div>
+        <div id="calendar">
+            <div id="calendarHeader">
+                <button id ='preBtn' type="button" class="btn btn-info">< 이전 달</button>
+                <div id='calendarT'></div>
+                <button id='nextBtn' type="button" class="btn btn-info">다음 달 ></button>
+            </div>
+            <div id="calendarBody">
 
-    </div>
-</div>
-<div id="sideCalendar">
-    <div id="viewDay">
+            </div>
+        </div>
+        <div id="sideCalendar">
+            <div id="viewDay">
 
-    </div>
-    <div id="listCertificate">
+            </div>
+            <div id="listCertificate">
 
-    </div>
-</div>
-</div>
-<script
-        src="https://code.jquery.com/jquery-3.6.0.js"
-        integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
-        crossorigin="anonymous"></script>
-<script src="/js/calendar.js"></script>
-</body>
+            </div>
+        </div>
+        </div>
+    <script
+            src="https://code.jquery.com/jquery-3.6.0.js"
+            integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
+            crossorigin="anonymous"></script>
+    <script src="/js/calendar.js"></script>
+    </body>
 
 
 </html>

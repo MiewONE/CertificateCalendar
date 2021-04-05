@@ -3,6 +3,15 @@ body{
     display : flex;
     padding: 20px
 }
+@font-face {
+    font-family: 'Cafe24Oneprettynight';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_twelve@1.1/Cafe24Oneprettynight.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+div,span{
+    font-family: 'Cafe24Oneprettynight';
+}
 #conditionSearch{
     width: 15%;
     border-radius: 20px 0px 0px 20px;
@@ -25,11 +34,11 @@ body{
     grid-template-columns : repeat(3,1fr);
     grid-template-rows: 50px;
     text-align: center;
-    background: #2ecc70;
-    color : white;
+
 }
 #calendarT{
-    font-size: 2em;
+    font-size: 3em;
+    font-weight: bold;
     display:flex;
     justify-content: center;
     align-items: center;
@@ -63,6 +72,7 @@ body{
     transition: 0.6s;
 }
 .calCell .day{
+    font-size: 1.3em;
     border-bottom: 1px solid sandybrown;
 }
 .exam{
@@ -71,7 +81,8 @@ body{
     /* border-bottom: 1px solid darkorange; */
 }
 .exam span{
-    font-size: 10px;
+    font-size: 12px;
+    font-weight:bold;
     padding:2px;
     padding-left: 3px;
     overflow:hidden;
@@ -97,6 +108,11 @@ body{
     font-size: 100%;
     border-radius: 0px 0px 20px 0px;
 }
+#conditionContainer{
+    display: flex;
+    justify-content: space-around;
+    flex-direction : column;
+}
 #listCertificate span{
     margin:5px;
     border-radius: 7px;
@@ -108,4 +124,8 @@ body{
     display:flex;
     justify-content: space-around;
     width: 80%;
+}
+
+#conditionSearch #conditionContainer{
+
 }
