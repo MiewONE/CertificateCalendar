@@ -56,6 +56,7 @@ public class Crawling {
 
     }
 
+
     public void saveToeicInfo()
     {
         List<CertificateCrawlingData> toeicInfo = Toeicget();
@@ -92,7 +93,7 @@ public class Crawling {
             ToeicCertificateEntity entity = ToeicCertificateEntity.builder()
                     .implSeq(implSeq)
                     .implYy(implYy)
-                    .description("토익 "+implSeq)
+                    .description("토익 "+implSeq+"회")
                     .ExamStartDt(ExamStartDt)
                     .RegStartDt(RegStartDt)
                     .RegEndDt(RegEndDt)

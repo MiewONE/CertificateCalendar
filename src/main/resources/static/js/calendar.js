@@ -18,25 +18,25 @@ const init = {
             type:'GET',
             contentType:"application/json;charset=utf-8",
             dataType:"json",
-            async:false
         }).done(function(data){
             console.log(data);
             nowData =data;
             rawData=data;
+            init.initFn();
         }).fail(function(){
-
+            alert(',Qnet 자격증 정보를 읽어오는데 실패하였습니다.');
         });
         $.ajax({
             url:'/api/certificate/toeic',
             type:'GET',
             contentType:"application/json;charset=utf-8",
             dataType:"json",
-            async:false
         }).done(function(data)
         {
             console.log(data);
             toeicData = data;
             toeicRawData = data;
+            init.initFn();
         }).fail(function(data)
         {
             alert('토익 정보를 읽어오는데 실패하였습니다.');
@@ -70,7 +70,7 @@ const init = {
         {
             $('#listCertificate').empty();
             const _this= this;
-            const _thisDiv = $('#'+_this.id).children('div').children('span');
+            const _thisDiv = $('#'+_this.id).children('div');
             $('#viewDay').text((_this.id+"").substring(6,8))
             for(let i=0;i<_thisDiv.length;i++)
             {
@@ -97,13 +97,17 @@ const init = {
         d.forEach(ele => {
             if($('#'+ele).children('div').length>3)
             {
-                $('#'+ele).append('<div class="exam" style="visibility:hidden;">'+title+'</div>')
+                $('#'+ele).append('<div class="exam" ><span style="visibility:hidden;">'+title+'</span></div>')
             }else if(subtitle)
             {
                 if(subtitle.includes("필기시험 원서접수")>0)
                     $('#'+ele).append('<div class="exam"><span style="background:#a0def0;">'+title+'</span></div>')
                 if(subtitle.includes("필기시험일")>0)
                     $('#'+ele).append('<div class="exam" ><span style="background:#FA6607;color:white;">'+title+'</span></div>')
+                if(subtitle.includes("추가")>0)
+                    $('#'+ele).append('<div class="exam" ><span style="background:#9080FF;color:white;">'+title+'</span></div>')
+                if(subtitle.includes("합격")>0)
+                    $('#'+ele).append('<div class="exam" ><span style="background:#FF9C38;color:white;">'+title+'</span></div>')
             }
             else
                 $('#'+ele).append('<div class="exam">'+title+'</div>')
@@ -153,8 +157,19 @@ const init = {
         {
             if($('.wordSeach').val())
             {
-                init.searchConditionInit(rawData,$('.wordSeach').val(),'description','qnet');
-                init.searchConditionInit(toeicRawData,$('.wordSeach').val(),'description','toeic');
+                if($('.wordSeach').val().indexOf(',')>1)
+                {
+                    const splitWord = $('.wordSeach').val().split(',');
+
+                    init.searchConditionInit(rawData,splitWord[0],'description','qnet','merge');
+                    init.searchConditionInit(toeicRawData,splitWord[1],'description','toeic','merge');
+
+                }else
+                {
+                    init.searchConditionInit(rawData,$('.wordSeach').val(),'description','qnet');
+                    init.searchConditionInit(toeicRawData,$('.wordSeach').val(),'description','toeic');
+                }
+
             }else
             {
                 nowData = rawData;
@@ -164,7 +179,7 @@ const init = {
         })
 
     },
-    searchConditionInit:function(data,conditionWord,filter,title)
+    searchConditionInit:function(data,conditionWord,filter,title,merge)
     {
 
         if(data)
@@ -188,14 +203,19 @@ const init = {
         elements.forEach(ele => {
             init.callApi(ele.docRegStartDt,ele.docRegEndDt,ele.description,"필기시험 원서접수");
             init.callApi(ele.docExamStartDt,ele.docExamEndDt,ele.description,"필기시험일");
-            init.callApi(ele.docPassDt,ele.docPassDt,ele.description,"필기시험 합격(예정)자 발표일자");
+            init.callApi(ele.pracRegStartDt,ele.pracRegEndDt,ele.description,"실기(작업)/면접 시험 원서접수");
+            init.callApi(ele.pracExamStartDt,ele.pracExamEndDt,ele.description,"실기(작업)/면접 시험일자");
+            init.callApi(ele.docPassDt,ele.docPassDt,ele.description+"\t합격자 발표","필기시험 합격(예정)자 발표일자");
+            init.callApi(ele.pracPassDt,ele.pracPassDt,ele.description+"\t합격자 발표","실기(작업)/면접 합격자 발표일자");
         })
     },
     arrayForiToeic : function(elements)
     {
         elements.forEach(ele => {
-            init.callApi(ele.regStartDt,ele.regEndDt,ele.description,"필기시험 원서접수");
-            init.callApi(ele.examStartDt,ele.examStartDt,ele.description,"필기시험일");
+            init.callApi(ele.regStartDt,ele.regEndDt,ele.description+"\t 접수","필기시험 원서접수");
+            init.callApi(ele.spcialRegStartDt,ele.spcialRegEndDt,ele.description+"\t추가접수","필기시험 추가접수");
+            init.callApi(ele.examStartDt,ele.examStartDt,ele.description+"\t필기시험","필기시험일");
+            init.callApi(ele.passDt,ele.passDt,ele.description+"\t합격자 발표","합격자 발표");
         })
     }
 }

@@ -94,12 +94,12 @@ body{
     background: #6c757d;
     display:flex;
     flex-direction: column;
-    color: white;
     font-size: 100%;
     border-radius: 0px 0px 20px 0px;
 }
-#listCertificate div{
+#listCertificate span{
     margin:5px;
+    border-radius: 7px;
 }
 #listCertificate div:hover{
     font-weight: bold;
