@@ -1,7 +1,10 @@
 package com.miewone.certificatecalnendar;
 
+import com.miewone.certificatecalnendar.domains.certificate.domain.Toeic.ToeicCertificateEntity;
+import com.miewone.certificatecalnendar.domains.certificate.domain.Toeic.ToeicCertificateRepository;
 import com.miewone.certificatecalnendar.domains.certificate.service.CallApiOfCertificate;
 import com.miewone.certificatecalnendar.domains.certificate.service.Crawling;
+import org.apache.coyote.Response;
 import org.json.simple.parser.ParseException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,12 +15,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
+import java.util.List;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class CertificatecalnendarApplicationTests {
     @Autowired
     private CallApiOfCertificate callApiOfCertificate;
-
+    @Autowired
+    private ToeicCertificateRepository toeicCertificateRepository;
     @Autowired
     private Crawling crawlingGet;
     @LocalServerPort
@@ -33,7 +38,7 @@ class CertificatecalnendarApplicationTests {
     @Test
     void  apiGetCall()
     {
-        String url = "http://localhost:"+port+"/api/certificate";
+        String url = "http://localhost:"+port+"/api/certificate/qnet";
 
         ResponseEntity<String> entity = client.getForEntity(url,String.class);
 //        List<qnetCertificateEntity> t = entity.getBody();
@@ -44,5 +49,22 @@ class CertificatecalnendarApplicationTests {
     void crawlingText()
     {
         crawlingGet.saveToeicInfo();
+    }
+
+    @DisplayName("3. 토익 api 테스트")
+    @Test
+    void apiGetToeicCall()
+    {
+        String url = "http://localhost:"+port+"/api/certificate/toeic";
+//        ResponseEntity<String> entity = client.getForEntity(url,String.class);
+        var ts = client.getForEntity(url,Object.class);
+
+    }
+
+    @DisplayName("3.1. 토익 repository select 테스트")
+    @Test
+    void listGet()
+    {
+        List<ToeicCertificateEntity> list = toeicCertificateRepository.findAll();
     }
 }

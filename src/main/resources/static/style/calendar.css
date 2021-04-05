@@ -53,7 +53,8 @@ body{
     border: 1px solid black;
     margin-left:-1px;
     margin-bottom:-1px;
-
+    overflow: hidden;
+    white-space: nowrap;
 }
 .calCell:hover{
     background :#f5eedc;
@@ -61,14 +62,21 @@ body{
     transform:scale(1.3,1.3);
     transition: 0.6s;
 }
-.calCell > span{
+.calCell .day{
     border-bottom: 1px solid sandybrown;
 }
-.test{
-    font-size: 10px;
-    margin:2px 2px;
-    padding: -15px;
+.exam{
+    height: 14px;
+    margin:6px;
     /* border-bottom: 1px solid darkorange; */
+}
+.exam span{
+    font-size: 10px;
+    padding:2px;
+    padding-left: 3px;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    border-radius: 8px;
 }
 #viewDay{
     height: 30%;

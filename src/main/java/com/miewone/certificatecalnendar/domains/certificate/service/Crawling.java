@@ -61,7 +61,7 @@ public class Crawling {
         List<CertificateCrawlingData> toeicInfo = Toeicget();
 
         String implYy; // 시행년도
-        Long impl_seq; // 시행회차
+        Long implSeq; // 시행회차
         String description; // 설명
         String ExamStartDt; // 시험 일자
         String RegStartDt; // 시험접수 시작일자
@@ -74,10 +74,10 @@ public class Crawling {
         {
 
             if(data.getNum().contains("★ ")) {
-                impl_seq = Long.parseLong(data.getNum().replaceAll("\\p{Z}","").substring(2, 5));
+                implSeq = Long.parseLong(data.getNum().replaceAll("\\p{Z}","").substring(2, 5));
             }else
             {
-                impl_seq = Long.parseLong(data.getNum().substring(1,4));
+                implSeq = Long.parseLong(data.getNum().substring(1,4));
             }
             ExamStartDt = data.getDate().substring(0,10).replaceAll("\\.","");
             PassDt = data.getReportPoint().substring(0,10).replaceAll("\\.","");
@@ -90,9 +90,9 @@ public class Crawling {
             implYy = ExamStartDt.substring(0,4);
 
             ToeicCertificateEntity entity = ToeicCertificateEntity.builder()
-                    .impl_seq(impl_seq)
+                    .implSeq(implSeq)
                     .implYy(implYy)
-                    .description("토익 "+impl_seq)
+                    .description("토익 "+implSeq)
                     .ExamStartDt(ExamStartDt)
                     .RegStartDt(RegStartDt)
                     .RegEndDt(RegEndDt)

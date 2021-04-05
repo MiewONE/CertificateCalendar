@@ -1,6 +1,7 @@
 package com.miewone.certificatecalnendar.domains.certificate.presentation.api;
 
 import com.miewone.certificatecalnendar.domains.certificate.domain.Qnet.QnetCertificateEntity;
+import com.miewone.certificatecalnendar.domains.certificate.domain.Toeic.ToeicCertificateEntity;
 import com.miewone.certificatecalnendar.domains.certificate.service.CertificateCRUD;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,10 +14,12 @@ import java.util.List;
 public class certificateApi {
     private final CertificateCRUD crud;
 
-    @GetMapping("/api/certificate")
-    public List<QnetCertificateEntity> AllCertificates()
+    @GetMapping("/api/certificate/qnet")
+    public List<QnetCertificateEntity> AllQnetCertificates()
     {
-        return crud.certificates();
+        return crud.QnetCertificates();
     }
 
+    @GetMapping("/api/certificate/toeic")
+    public List<ToeicCertificateEntity> ToeicCertificates() {return crud.ToeicCertificate();}
 }
