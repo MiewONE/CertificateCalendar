@@ -1,5 +1,6 @@
 package com.miewone.certificatecalnendar.domains.certificate.domain.Qnet;
 
+import com.miewone.certificatecalnendar.common.config.logging.BaseEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,7 +13,7 @@ import javax.persistence.*;
 @Table(name = "qnetCertificate")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class QnetCertificateEntity {
+public class QnetCertificateEntity extends BaseEntity {
 
     @Id @Column(length = 50)
     private String description;

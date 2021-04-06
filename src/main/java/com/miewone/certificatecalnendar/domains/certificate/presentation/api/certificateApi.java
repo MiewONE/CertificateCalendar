@@ -1,5 +1,6 @@
 package com.miewone.certificatecalnendar.domains.certificate.presentation.api;
 
+import com.miewone.certificatecalnendar.domains.certificate.domain.KoreaHistory.KoreaHistoryEntity;
 import com.miewone.certificatecalnendar.domains.certificate.domain.Qnet.QnetCertificateEntity;
 import com.miewone.certificatecalnendar.domains.certificate.domain.Toeic.ToeicCertificateEntity;
 import com.miewone.certificatecalnendar.domains.certificate.service.CertificateCRUD;
@@ -22,4 +23,7 @@ public class certificateApi {
 
     @GetMapping("/api/certificate/toeic")
     public List<ToeicCertificateEntity> ToeicCertificates() {return crud.ToeicCertificate();}
+
+    @GetMapping("/api/certificate/koreaHistory")
+    public List<KoreaHistoryEntity> KoreaHistoryCertificates() {return crud.KoreaHistoryCertificate();}
 }

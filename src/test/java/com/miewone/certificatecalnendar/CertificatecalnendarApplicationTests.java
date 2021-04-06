@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.List;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -46,8 +47,7 @@ class CertificatecalnendarApplicationTests {
 
     @DisplayName("2. 크롤링 테스트")
     @Test
-    void crawlingText()
-    {
+    void crawlingText() throws MalformedURLException {
         crawlingGet.saveToeicInfo();
     }
 
@@ -66,5 +66,11 @@ class CertificatecalnendarApplicationTests {
     void listGet()
     {
         List<ToeicCertificateEntity> list = toeicCertificateRepository.findAll();
+    }
+    @DisplayName("4. 한국사 크롤링 테슽")
+    @Test
+    void  crawlingKoreaHistory() throws MalformedURLException
+    {
+        crawlingGet.saveKoreaHistoryInfo();
     }
 }

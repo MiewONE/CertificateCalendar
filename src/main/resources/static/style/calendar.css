@@ -1,6 +1,11 @@
 body{
     width: 100%;
     display : flex;
+    flex-direction: column;
+}
+#Conatiner{
+    width: 100%;
+    display : flex;
     padding: 20px
 }
 @font-face {
@@ -9,21 +14,36 @@ body{
     font-weight: normal;
     font-style: normal;
 }
-div,span{
+div,span,a{
     font-family: 'Cafe24Oneprettynight';
+    font-weight: bold;
+}
+li span{
+    border-radius: 7px;
+    padding: 3px;
+    margin: 3px;
+}
+a:link
+{
+    text-decoration: none;
+}
+a:visited { text-decoration: none;}
+a:hover {
+    text-decoration: none;
+    cursor :pointer;
 }
 #conditionSearch{
     width: 15%;
+    border: 1px solid black;
     border-radius: 20px 0px 0px 20px;
-    background: #6c757d;
     display:flex;
     flex-direction: column;
     padding:10px;
+    justify-content: space-around;
 }
 #calendar{
     width: 70%;
     border-bottom: 1px solid tomato;
-    background-color: whitesmoke;
 }
 #sideCalendar{
     width: 15%;
@@ -34,9 +54,9 @@ div,span{
     grid-template-columns : repeat(3,1fr);
     grid-template-rows: 50px;
     text-align: center;
-
 }
 #calendarT{
+    border-top:1px solid black;
     font-size: 3em;
     font-weight: bold;
     display:flex;
@@ -57,6 +77,17 @@ div,span{
 #calendarBody > div:nth-child(7n+1) > span
 {
     color : red;
+}
+#DayContainer{
+    display:grid;
+    grid-template-columns : repeat(7,1fr);
+    text-align: center;
+}
+#DayContainer div{
+    border: 1px solid black;
+    margin:-1px;
+    margin-left :-1px;
+    font-size:1.5em;
 }
 .calCell{
     border: 1px solid black;
@@ -91,7 +122,7 @@ div,span{
 }
 #viewDay{
     height: 30%;
-    background: #6c757d;
+    background: #94989B;
     display:flex;
     justify-content: center;
     align-items: center;
@@ -102,11 +133,15 @@ div,span{
 }
 #listCertificate{
     height: 70%;
-    background: #6c757d;
+    background: #94989B;
     display:flex;
     flex-direction: column;
     font-size: 100%;
     border-radius: 0px 0px 20px 0px;
+    color:white;
+}
+#listCertificate > div > a{
+    color:white;
 }
 #conditionContainer{
     display: flex;
@@ -128,4 +163,12 @@ div,span{
 
 #conditionSearch #conditionContainer{
 
+}
+.daySpans{
+    display:flex;
+    justify-content: space-between;
+}
+#footer{
+    display:flex;
+    justify-content: space-between;
 }

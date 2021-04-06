@@ -1,4 +1,4 @@
-package com.miewone.certificatecalnendar.domains.certificate.domain.Toeic;
+package com.miewone.certificatecalnendar.domains.certificate.domain.KoreaHistory;
 
 import com.miewone.certificatecalnendar.common.config.logging.BaseEntity;
 import lombok.AccessLevel;
@@ -11,10 +11,10 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name ="toeicCertificate")
 @Getter
+@Table(name = "KoreaHistory")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ToeicCertificateEntity extends BaseEntity {
+public class KoreaHistoryEntity extends BaseEntity {
     @Id
     Long implSeq; // 시행회차
     String implYy; // 시행년도
@@ -27,7 +27,7 @@ public class ToeicCertificateEntity extends BaseEntity {
     String PassDt; // 시험 합격자 발표일자
 
     @Builder
-    public ToeicCertificateEntity(Long implSeq,String implYy,String description,String ExamStartDt,String RegStartDt,String RegEndDt,String SpcialRegStartDt,String SpcialRegEndDt,String PassDt)
+    public KoreaHistoryEntity(Long implSeq,String implYy,String description,String ExamStartDt, String RegStartDt,String RegEndDt,String SpcialRegStartDt,String SpcialRegEndDt, String PassDt)
     {
         this.implSeq = implSeq;
         this.implYy = implYy;

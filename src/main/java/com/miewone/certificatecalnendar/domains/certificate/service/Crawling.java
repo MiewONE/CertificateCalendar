@@ -1,6 +1,8 @@
 package com.miewone.certificatecalnendar.domains.certificate.service;
 
 import com.miewone.certificatecalnendar.domains.certificate.domain.CertificateCrawlingData;
+import com.miewone.certificatecalnendar.domains.certificate.domain.KoreaHistory.KoreaHistoryEntity;
+import com.miewone.certificatecalnendar.domains.certificate.domain.KoreaHistory.KoreaHistoryRepository;
 import com.miewone.certificatecalnendar.domains.certificate.domain.Qnet.QnetCertificateEntity;
 import com.miewone.certificatecalnendar.domains.certificate.domain.Qnet.QnetCertificateRepository;
 import com.miewone.certificatecalnendar.domains.certificate.domain.Toeic.ToeicCertificateEntity;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,15 +25,26 @@ import java.util.List;
 @RequiredArgsConstructor
 public class Crawling {
     private final ToeicCertificateRepository toeicCertificateRepository;
+    private final KoreaHistoryRepository koreaHistoryRepository;
     List<CertificateCrawlingData> tdInnerText = new ArrayList<>();
     List<String> tdText = new ArrayList<>();
 
-    private List<CertificateCrawlingData> Toeicget()
+    String implYy; // 시행년도
+    Long implSeq; // 시행회차
+    String description; // 설명
+    String ExamStartDt; // 시험 일자
+    String RegStartDt; // 시험접수 시작일자
+    String RegEndDt; // 시험접수 종료일자
+    String SpcialRegStartDt; // 특별추가 접수 시작일자
+    String SpcialRegEndDt; // 특별추가 접수 종료 일자.
+    String PassDt; // 시험 합격자 발표일자
+    private List<CertificateCrawlingData> Toeicget(URL url,String baseUrl,String docSeletor)
     {
         try
         {
-            Document doc = Jsoup.parse(new URL("https://exam.toeic.co.kr/receipt/examSchList.php").openStream(),"utf-8","https://exam.toeic.co.kr");
-            Elements periodExam = doc.select("tbody tr");
+            Document doc = Jsoup.parse(url.openStream(),"utf-8",baseUrl);
+
+            Elements periodExam = doc.select(docSeletor);
 
             for(Element postPeriod : periodExam)
             {
@@ -40,36 +54,68 @@ public class Crawling {
                 {
                     tdText.add(td.text());
                 }
-                tdInnerText.add(new CertificateCrawlingData(
-                        tdText.get(0),
-                        tdText.get(1),
-                        tdText.get(2),
-                        tdText.get(3)));
-                tdText.clear();
+                if(!tdText.isEmpty())
+                {
+                    if(url.toString().contains("toeic"))
+                    {
+                        tdInnerText.add(new CertificateCrawlingData(tdText.get(0),tdText.get(1),tdText.get(2),tdText.get(3),null));
+                        tdText.clear();
+                    }else
+                    {
+                        tdInnerText.add(new CertificateCrawlingData(tdText.get(0),tdText.get(1),tdText.get(2),tdText.get(3),tdText.get(4)));
+                        tdText.clear();
+                    }
+
+                }
             }
-            System.out.println("123");
         }catch(IOException e)
         {
-
+            System.out.println(url+"\t정보 수집 불가.");
         }
         return tdInnerText;
 
     }
 
 
-    public void saveToeicInfo()
+    public void saveKoreaHistoryInfo() throws MalformedURLException
     {
-        List<CertificateCrawlingData> toeicInfo = Toeicget();
+        List<CertificateCrawlingData> koreaHistoryInfo = Toeicget(new URL("http://www.historyexam.go.kr/pageLink.do?link=examSchedule")," www.historyexam.go.kr","#sub_content > div.right_sider > div.right_contents > table:nth-child(4) > tbody > tr");
 
-        String implYy; // 시행년도
-        Long implSeq; // 시행회차
-        String description; // 설명
-        String ExamStartDt; // 시험 일자
-        String RegStartDt; // 시험접수 시작일자
-        String RegEndDt; // 시험접수 종료일자
-        String SpcialRegStartDt; // 특별추가 접수 시작일자
-        String SpcialRegEndDt; // 특별추가 접수 종료 일자.
-        String PassDt; // 시험 합격자 발표일자
+        for(var data : koreaHistoryInfo)
+        {
+            String temp = "";
+            implSeq = Long.parseLong(data.getNum().substring(data.getNum().indexOf("제")+1,data.getNum().indexOf("회")));
+            implYy = data.getApplyExam().substring(0,data.getApplyExam().indexOf("년"));
+            String[] dateSplit = data.getApplyExam().split(" ");
+            ExamStartDt=DateSubstring(dateSplit);
+            dateSplit = data.getDate().split("~");
+            RegStartDt = DateSubstring(dateSplit[0].split(" "));
+            RegEndDt = DateSubstring(dateSplit[1].split(" "));
+            dateSplit = data.getReportPoint().split("~");
+            SpcialRegStartDt = DateSubstring(dateSplit[0].split(" "));
+            SpcialRegEndDt =DateSubstring(dateSplit[1].split(" "));
+            PassDt = DateSubstring(data.getApplyExam().split(" "));
+            description = "한국사 "+implSeq+"회";
+
+            KoreaHistoryEntity entity = KoreaHistoryEntity.builder()
+                    .implSeq(implSeq)
+                    .implYy(implYy)
+                    .ExamStartDt(ExamStartDt)
+                    .RegStartDt(RegStartDt)
+                    .RegEndDt(RegEndDt)
+                    .SpcialRegStartDt(SpcialRegStartDt)
+                    .SpcialRegEndDt(SpcialRegEndDt)
+                    .PassDt(PassDt)
+                    .description(description)
+                    .build();
+            koreaHistoryRepository.save(entity);
+//            ExamStartDt =data.getApplyExam().replaceAll("\\p{Z}","").substring(data.getApplyExam().indexOf("일")+1)
+        }
+    }
+    public void saveToeicInfo() throws MalformedURLException {
+        List<CertificateCrawlingData> toeicInfo = Toeicget(new URL("https://exam.toeic.co.kr/receipt/examSchList.php"),"https://exam.toeic.co.kr","tbody tr");
+
+
 
         for(var data : toeicInfo)
         {
@@ -105,5 +151,27 @@ public class Crawling {
             System.out.println();
         }
 
+    }
+    private String DateSubstring(String[] dateSplit)
+    {
+        String temp= "";
+        for(var date : dateSplit) //년 월 일 담겨져있는 문자열에서 yyyyMMdd형식으로 뽑아내기
+        {
+            if(date.contains("년"))
+                temp+=date.substring(0,date.indexOf("년"));
+            else if(date.contains("월"))
+            {
+                date = date.substring(0, date.indexOf("월"));
+                date = date.length()<2?"0"+date:date;
+                temp += date;
+            }
+            else if(date.contains("일"))
+            {
+                date = date.substring(0, date.indexOf("일"));
+                date = date.length()<2?"0"+date:date;
+                temp += date;
+            }
+        }
+        return temp;
     }
 }

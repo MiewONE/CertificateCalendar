@@ -4,6 +4,9 @@ let rawData;
 let conditionData;
 let toeicData;
 let toeicRawData;
+let koreaHistoryData;
+let koreaHistoryRawData;
+let click = false;
 let nowState = {
     qnet : true,
     toeic : true,
@@ -41,6 +44,21 @@ const init = {
         {
             alert('토익 정보를 읽어오는데 실패하였습니다.');
         })
+        $.ajax({
+            url:'/api/certificate/koreaHistory',
+            type:'GET',
+            contentType:"application/json;charset=utf-8",
+            dataType:"json",
+        }).done(function(data)
+        {
+            console.log(data);
+            koreaHistoryData = data;
+            koreaHistoryRawData = data;
+            init.initFn();
+        }).fail(function(data)
+        {
+            alert('한국사 정보를 읽어오는데 실패하였습니다.');
+        })
     },
     initFn : function()
     {
@@ -61,27 +79,46 @@ const init = {
         {
             const viewDay =(MonthOfFir.getDate()+i)<10?"0"+(MonthOfFir.getDate()+i):MonthOfFir.getDate()+i;
             $('#calendarBody').append(`<div class='calCell' id='${MonthOfFir.getFullYear()}${todayMonth}${viewDay}'>
-            <span class="day">
-            ${MonthOfFir.getDate()+i}</span></div>`);
+            <div class="daySpans"><span style="margin-left: 2px;"class="day">
+            ${MonthOfFir.getDate()+i}</span><span class="rowCnt">1</span></div></div>`);
         }
         if(nowData && nowState.qnet) this.arrayForiQnet(nowData);
         if(toeicData && nowState.toeic) this.arrayForiToeic(toeicData)
+        if(koreaHistoryData && nowState.koreaHistory) this.arrayforiKoreaHistory(koreaHistoryData);
+        $('.calCell').hover(function()
+        {
+            if(!click)
+            {
+                $('#listCertificate').empty();
+                const _this = this;
+                const _thisDiv = $('#' + _this.id).children('div').children('span');
+                $('#viewDay').text((_this.id + "").substring(6, 8))
+                for (let i = 2; i < _thisDiv.length; i++) {
+                    $('#listCertificate').append('<div>' + _thisDiv[i].innerHTML + "</div>");
+                }
+            }
+        });
         $('.calCell').on('click',function()
         {
+
             $('#listCertificate').empty();
-            const _this= this;
-            const _thisDiv = $('#'+_this.id).children('div');
-            $('#viewDay').text((_this.id+"").substring(6,8))
-            for(let i=0;i<_thisDiv.length;i++)
-            {
-                $('#listCertificate').append('<div>'+_thisDiv[i].innerHTML+"</div>");
+            const _this = this;
+            const _thisDiv = $('#' + _this.id).children('div').children('span');
+            $('#viewDay').text((_this.id + "").substring(6, 8))
+            for (let i = 2; i < _thisDiv.length; i++) {
+                $('#listCertificate').append('<div>' + _thisDiv[i].innerHTML + "</div>");
             }
+            click = !click;
+            setTimeout(function()
+            {
+                click = !click;
+            },1500)
         });
 
 
 
     },
-    callApi : function(st,en,title,subtitle)
+    callApi : function(st,en,title,subtitle,url)
     {
         const s =$('#calendarBody').children('.calCell')
         let d = new Array();
@@ -97,21 +134,27 @@ const init = {
         d.forEach(ele => {
             if($('#'+ele).children('div').length>3)
             {
-                $('#'+ele).append('<div class="exam" ><span style="visibility:hidden;">'+title+'</span></div>')
+                $('#'+ele).append(`<div class="exam" ><span style="visibility:hidden;"><a href=${url} target="_blank">${title}</a></span></div>`)
             }else if(subtitle)
             {
                 if(subtitle.includes("필기시험 원서접수")>0)
-                    $('#'+ele).append('<div class="exam"><span style="background:#a0def0;">'+title+'</span></div>')
+                    $('#'+ele).append(`<div class="exam"><span style="background:#a0def0;"><a href=${url} target="_blank" style="color:black;">${title}</a></span></div>`)
+                if(subtitle.includes("면접 시험일자")>0)
+                    $(`#`+ele).append(`<div class="exam" ><span style="background:#C9C939;"><a href=${url} target="_blank" style="color:black;">${title}</a></span></div>`)
+                if(subtitle.includes("면접 시험 원서접수")>0)
+                    $(`#`+ele).append(`<div class="exam" ><span style="background:#BCDCA0;"><a href=${url} target="_blank" style="color:black;">${title}</a></span></div>`)
                 if(subtitle.includes("필기시험일")>0)
-                    $('#'+ele).append('<div class="exam" ><span style="background:#FA6607;color:white;">'+title+'</span></div>')
+                    $(`#`+ele).append(`<div class="exam" ><span style="background:#FA6607;"><a href=${url} target="_blank" style="color:white;">${title}</a></span></div>`)
                 if(subtitle.includes("추가")>0)
-                    $('#'+ele).append('<div class="exam" ><span style="background:#9080FF;color:white;">'+title+'</span></div>')
+                    $(`#`+ele).append(`<div class="exam" ><span style="background:#9080FF;"><a href=${url} target="_blank" style="color:white;">${title}</a></span></div>`)
                 if(subtitle.includes("합격")>0)
-                    $('#'+ele).append('<div class="exam" ><span style="background:#FF9C38;color:white;">'+title+'</span></div>')
+                    $(`#`+ele).append(`<div class="exam" ><span style="background:#FF9C38;"><a href=${url} target="_blank" style="color:white;">${title}</a></span></div>`)
             }
             else
-                $('#'+ele).append('<div class="exam">'+title+'</div>')
+                $('#'+ele).append(`<div class="exam"><a href=${url} target="_blank">${title}</a></div>`)
+            $('#'+ele+'> div.daySpans > span.rowCnt').text('rows : '+($('#'+ele).children('div').length-1));
         })
+
     },
     btnInitFun:function()
     {
@@ -163,17 +206,20 @@ const init = {
 
                     init.searchConditionInit(rawData,splitWord[0],'description','qnet','merge');
                     init.searchConditionInit(toeicRawData,splitWord[1],'description','toeic','merge');
+                    init.searchConditionInit(koreaHistoryRawData,splitWord[1],'description','koreaHistory','merge');
 
                 }else
                 {
                     init.searchConditionInit(rawData,$('.wordSeach').val(),'description','qnet');
                     init.searchConditionInit(toeicRawData,$('.wordSeach').val(),'description','toeic');
+                    init.searchConditionInit(koreaHistoryRawData,$('.wordSeach').val(),'description','koreaHistory','merge');
                 }
 
             }else
             {
                 nowData = rawData;
                 toeicData = toeicRawData;
+                koreaHistoryData = koreaHistoryRawData;
                 init.initFn();
             }
         })
@@ -192,30 +238,43 @@ const init = {
                 case 'toeic' :
                     toeicData = data.filter(dt => dt[filter].includes(conditionWord)>0);
                     break;
+                case 'koreaHistory' :
+                    koreaHistoryData = data.filter(dt => dt[filter].includes(conditionWord)>0);
             }
             $('.exam').remove();
             init.arrayForiQnet(nowData);
             init.arrayForiToeic(toeicData);
+            init.arrayforiKoreaHistory(koreaHistoryData);
         }
     },
     arrayForiQnet : function(elements)
     {
         elements.forEach(ele => {
-            init.callApi(ele.docRegStartDt,ele.docRegEndDt,ele.description,"필기시험 원서접수");
-            init.callApi(ele.docExamStartDt,ele.docExamEndDt,ele.description,"필기시험일");
-            init.callApi(ele.pracRegStartDt,ele.pracRegEndDt,ele.description,"실기(작업)/면접 시험 원서접수");
-            init.callApi(ele.pracExamStartDt,ele.pracExamEndDt,ele.description,"실기(작업)/면접 시험일자");
-            init.callApi(ele.docPassDt,ele.docPassDt,ele.description+"\t합격자 발표","필기시험 합격(예정)자 발표일자");
-            init.callApi(ele.pracPassDt,ele.pracPassDt,ele.description+"\t합격자 발표","실기(작업)/면접 합격자 발표일자");
+            init.callApi(ele.docRegStartDt,ele.docRegEndDt,ele.description,"필기시험 원서접수","http://www.q-net.or.kr/man001.do?id=man00103&gSite=Q&gId=&login=Y");
+            init.callApi(ele.docExamStartDt,ele.docExamEndDt,ele.description,"필기시험일","http://www.q-net.or.kr/man001.do?id=man00103&gSite=Q&gId=&login=Y");
+            init.callApi(ele.pracRegStartDt,ele.pracRegEndDt,ele.description,"실기(작업)/면접 시험 원서접수","http://www.q-net.or.kr/man001.do?id=man00103&gSite=Q&gId=&login=Y");
+            init.callApi(ele.pracExamStartDt,ele.pracExamEndDt,ele.description,"실기(작업)/면접 시험일자","http://www.q-net.or.kr/man001.do?id=man00103&gSite=Q&gId=&login=Y");
+            init.callApi(ele.docPassDt,ele.docPassDt,ele.description+"\t합격자 발표","필기시험 합격(예정)자 발표일자","http://www.q-net.or.kr/man001.do?id=man00103&gSite=Q&gId=&login=Y");
+            init.callApi(ele.pracPassDt,ele.pracPassDt,ele.description+"\t합격자 발표","실기(작업)/면접 합격자 발표일자","http://www.q-net.or.kr/man001.do?id=man00103&gSite=Q&gId=&login=Y");
         })
     },
     arrayForiToeic : function(elements)
     {
         elements.forEach(ele => {
-            init.callApi(ele.regStartDt,ele.regEndDt,ele.description+"\t 접수","필기시험 원서접수");
-            init.callApi(ele.spcialRegStartDt,ele.spcialRegEndDt,ele.description+"\t추가접수","필기시험 추가접수");
-            init.callApi(ele.examStartDt,ele.examStartDt,ele.description+"\t필기시험","필기시험일");
-            init.callApi(ele.passDt,ele.passDt,ele.description+"\t합격자 발표","합격자 발표");
+            init.callApi(ele.regStartDt,ele.regEndDt,ele.description+"\t 접수","필기시험 원서접수","https://exam.toeic.co.kr/receipt/examSchList.php");
+            init.callApi(ele.spcialRegStartDt,ele.spcialRegEndDt,ele.description+"\t추가접수","필기시험 추가접수","https://exam.toeic.co.kr/receipt/examSchList.php");
+            init.callApi(ele.examStartDt,ele.examStartDt,ele.description+"\t필기시험","필기시험일","https://exam.toeic.co.kr/receipt/examSchList.php");
+            init.callApi(ele.passDt,ele.passDt,ele.description+"\t합격자 발표","합격자 발표","https://exam.toeic.co.kr/receipt/examSchList.php");
+        })
+    },
+    arrayforiKoreaHistory : function(elements)
+    {
+        elements.forEach(ele =>
+        {
+            init.callApi(ele.regStartDt,ele.regEndDt,ele.description+"\t 접수","필기시험 원서접수","http://www.historyexam.go.kr/pageLink.do?link=examSchedule");
+            init.callApi(ele.spcialRegStartDt,ele.spcialRegEndDt,ele.description+"\t추가접수","필기시험 추가접수","http://www.historyexam.go.kr/pageLink.do?link=examSchedule");
+            init.callApi(ele.examStartDt,ele.examStartDt,ele.description+"\t필기시험","필기시험일","http://www.historyexam.go.kr/pageLink.do?link=examSchedule");
+            init.callApi(ele.passDt,ele.passDt,ele.description+"\t합격자 발표","합격자 발표","http://www.historyexam.go.kr/pageLink.do?link=examSchedule");
         })
     }
 }
