@@ -13,6 +13,14 @@ let nowState = {
     koreaHistory : true,
     korcham : true
 };
+let nowViewPoint={
+    DocExamApply: true,
+    pracExamApply: true,
+    DocExam: true,
+    pracExam: true,
+    AddExamApply: true,
+    PassReport: true,
+}
 const init = {
     dataInit : function()
     {
@@ -80,7 +88,7 @@ const init = {
             const viewDay =(MonthOfFir.getDate()+i)<10?"0"+(MonthOfFir.getDate()+i):MonthOfFir.getDate()+i;
             $('#calendarBody').append(`<div class='calCell' id='${MonthOfFir.getFullYear()}${todayMonth}${viewDay}'>
             <div class="daySpans"><span style="margin-left: 2px;"class="day">
-            ${MonthOfFir.getDate()+i}</span><span class="rowCnt">1</span></div></div>`);
+            ${MonthOfFir.getDate()+i}</span><span class="rowCnt">rows: 0</span></div></div>`);
         }
         if(nowData && nowState.qnet) this.arrayForiQnet(nowData);
         if(toeicData && nowState.toeic) this.arrayForiToeic(toeicData)
@@ -121,6 +129,7 @@ const init = {
     callApi : function(st,en,title,subtitle,url)
     {
         const s =$('#calendarBody').children('.calCell')
+
         let d = new Array();
         for(let i=0;i<s.length;i++)
         {
@@ -132,6 +141,7 @@ const init = {
         }
         // if($('#text')) --> 아이템이 너무 많으면 깨질것 같음 처리필요.
         d.forEach(ele => {
+            $('#'+ele+'> div.daySpans > span.rowCnt').text('rows: 0');
             if($('#'+ele).children('div').length>3)
             {
                 $('#'+ele).append(`<div class="exam" ><span style="visibility:hidden;"><a href=${url} target="_blank">${title}</a></span></div>`)
@@ -196,6 +206,46 @@ const init = {
             }
             init.initFn();
         });
+        $('.ViewCondition').on('click',function()
+        {
+            if($('#DocExamApply').is(":checked"))
+            {
+                nowViewPoint.DocExamApply = true;
+            }else{
+                nowViewPoint.DocExamApply = false;
+            }
+            if($('#pracExamApply').is(":checked"))
+            {
+                nowViewPoint.pracExamApply = true;
+            }else{
+                nowViewPoint.pracExamApply = false;
+            }
+            if($('#DocExam').is(":checked"))
+            {
+                nowViewPoint.DocExam = true;
+            }else{
+                nowViewPoint.DocExam = false;
+            }
+            if($('#pracExam').is(":checked"))
+            {
+                nowViewPoint.pracExam = true;
+            }else{
+                nowViewPoint.pracExam= false;
+            }
+            if($('#AddExamApply').is(":checked"))
+            {
+                nowViewPoint.AddExamApply = true;
+            }else{
+                nowViewPoint.AddExamApply = false;
+            }
+            if($('#PassReport').is(":checked"))
+            {
+                nowViewPoint.PassReport = true;
+            }else{
+                nowViewPoint.PassReport= false;
+            }
+            init.initFn();
+        });
         $('.wordSeach').on('input',function()
         {
             if($('.wordSeach').val())
@@ -242,6 +292,7 @@ const init = {
                     koreaHistoryData = data.filter(dt => dt[filter].includes(conditionWord)>0);
             }
             $('.exam').remove();
+            init.initFn();
             init.arrayForiQnet(nowData);
             init.arrayForiToeic(toeicData);
             init.arrayforiKoreaHistory(koreaHistoryData);
@@ -249,33 +300,38 @@ const init = {
     },
     arrayForiQnet : function(elements)
     {
-        elements.forEach(ele => {
-            init.callApi(ele.docRegStartDt,ele.docRegEndDt,ele.description,"필기시험 원서접수","http://www.q-net.or.kr/man001.do?id=man00103&gSite=Q&gId=&login=Y");
-            init.callApi(ele.docExamStartDt,ele.docExamEndDt,ele.description,"필기시험일","http://www.q-net.or.kr/man001.do?id=man00103&gSite=Q&gId=&login=Y");
-            init.callApi(ele.pracRegStartDt,ele.pracRegEndDt,ele.description,"실기(작업)/면접 시험 원서접수","http://www.q-net.or.kr/man001.do?id=man00103&gSite=Q&gId=&login=Y");
-            init.callApi(ele.pracExamStartDt,ele.pracExamEndDt,ele.description,"실기(작업)/면접 시험일자","http://www.q-net.or.kr/man001.do?id=man00103&gSite=Q&gId=&login=Y");
-            init.callApi(ele.docPassDt,ele.docPassDt,ele.description+"\t합격자 발표","필기시험 합격(예정)자 발표일자","http://www.q-net.or.kr/man001.do?id=man00103&gSite=Q&gId=&login=Y");
-            init.callApi(ele.pracPassDt,ele.pracPassDt,ele.description+"\t합격자 발표","실기(작업)/면접 합격자 발표일자","http://www.q-net.or.kr/man001.do?id=man00103&gSite=Q&gId=&login=Y");
-        })
+        if(nowState.qnet) {
+            elements.forEach(ele => {
+                if(nowViewPoint.DocExamApply)init.callApi(ele.docRegStartDt, ele.docRegEndDt, ele.description, "필기시험 원서접수", "http://www.q-net.or.kr/man001.do?id=man00103&gSite=Q&gId=&login=Y");
+                if(nowViewPoint.DocExam)init.callApi(ele.docExamStartDt, ele.docExamEndDt, ele.description, "필기시험일", "http://www.q-net.or.kr/man001.do?id=man00103&gSite=Q&gId=&login=Y");
+                if(nowViewPoint.pracExamApply)init.callApi(ele.pracRegStartDt, ele.pracRegEndDt, ele.description, "실기(작업)/면접 시험 원서접수", "http://www.q-net.or.kr/man001.do?id=man00103&gSite=Q&gId=&login=Y");
+                if(nowViewPoint.pracExam)init.callApi(ele.pracExamStartDt, ele.pracExamEndDt, ele.description, "실기(작업)/면접 시험일자", "http://www.q-net.or.kr/man001.do?id=man00103&gSite=Q&gId=&login=Y");
+                if(nowViewPoint.PassReport)init.callApi(ele.docPassDt, ele.docPassDt, ele.description + "\t합격자 발표", "필기시험 합격(예정)자 발표일자", "http://www.q-net.or.kr/man001.do?id=man00103&gSite=Q&gId=&login=Y");
+                if(nowViewPoint.PassReport)init.callApi(ele.pracPassDt, ele.pracPassDt, ele.description + "\t합격자 발표", "실기(작업)/면접 합격자 발표일자", "http://www.q-net.or.kr/man001.do?id=man00103&gSite=Q&gId=&login=Y");
+            })
+        }
     },
     arrayForiToeic : function(elements)
     {
-        elements.forEach(ele => {
-            init.callApi(ele.regStartDt,ele.regEndDt,ele.description+"\t 접수","필기시험 원서접수","https://exam.toeic.co.kr/receipt/examSchList.php");
-            init.callApi(ele.spcialRegStartDt,ele.spcialRegEndDt,ele.description+"\t추가접수","필기시험 추가접수","https://exam.toeic.co.kr/receipt/examSchList.php");
-            init.callApi(ele.examStartDt,ele.examStartDt,ele.description+"\t필기시험","필기시험일","https://exam.toeic.co.kr/receipt/examSchList.php");
-            init.callApi(ele.passDt,ele.passDt,ele.description+"\t합격자 발표","합격자 발표","https://exam.toeic.co.kr/receipt/examSchList.php");
-        })
+        if(nowState.toeic) {
+            elements.forEach(ele => {
+                if(nowViewPoint.DocExamApply)init.callApi(ele.regStartDt, ele.regEndDt, ele.description + "\t 접수", "필기시험 원서접수", "https://exam.toeic.co.kr/receipt/examSchList.php");
+                if(nowViewPoint.AddExamApply)init.callApi(ele.spcialRegStartDt, ele.spcialRegEndDt, ele.description + "\t추가접수", "필기시험 추가접수", "https://exam.toeic.co.kr/receipt/examSchList.php");
+                if(nowViewPoint.DocExam)init.callApi(ele.examStartDt, ele.examStartDt, ele.description + "\t필기시험", "필기시험일", "https://exam.toeic.co.kr/receipt/examSchList.php");
+                if(nowViewPoint.PassReport)init.callApi(ele.passDt, ele.passDt, ele.description + "\t합격자 발표", "합격자 발표", "https://exam.toeic.co.kr/receipt/examSchList.php");
+            })
+        }
     },
     arrayforiKoreaHistory : function(elements)
     {
-        elements.forEach(ele =>
-        {
-            init.callApi(ele.regStartDt,ele.regEndDt,ele.description+"\t 접수","필기시험 원서접수","http://www.historyexam.go.kr/pageLink.do?link=examSchedule");
-            init.callApi(ele.spcialRegStartDt,ele.spcialRegEndDt,ele.description+"\t추가접수","필기시험 추가접수","http://www.historyexam.go.kr/pageLink.do?link=examSchedule");
-            init.callApi(ele.examStartDt,ele.examStartDt,ele.description+"\t필기시험","필기시험일","http://www.historyexam.go.kr/pageLink.do?link=examSchedule");
-            init.callApi(ele.passDt,ele.passDt,ele.description+"\t합격자 발표","합격자 발표","http://www.historyexam.go.kr/pageLink.do?link=examSchedule");
-        })
+        if(nowState.koreaHistory) {
+            elements.forEach(ele => {
+                if(nowViewPoint.DocExamApply)init.callApi(ele.regStartDt, ele.regEndDt, ele.description + "\t 접수", "필기시험 원서접수", "http://www.historyexam.go.kr/pageLink.do?link=examSchedule");
+                if(nowViewPoint.AddExamApply)init.callApi(ele.spcialRegStartDt, ele.spcialRegEndDt, ele.description + "\t추가접수", "필기시험 추가접수", "http://www.historyexam.go.kr/pageLink.do?link=examSchedule");
+                if(nowViewPoint.DocExam)init.callApi(ele.examStartDt, ele.examStartDt, ele.description + "\t필기시험", "필기시험일", "http://www.historyexam.go.kr/pageLink.do?link=examSchedule");
+                if(nowViewPoint.PassReport)init.callApi(ele.passDt, ele.passDt, ele.description + "\t합격자 발표", "합격자 발표", "http://www.historyexam.go.kr/pageLink.do?link=examSchedule");
+            })
+        }
     }
 }
 

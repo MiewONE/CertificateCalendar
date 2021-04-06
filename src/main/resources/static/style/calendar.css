@@ -18,7 +18,7 @@ div,span,a{
     font-family: 'Cafe24Oneprettynight';
     font-weight: bold;
 }
-li span{
+ul span{
     border-radius: 7px;
     padding: 3px;
     margin: 3px;
