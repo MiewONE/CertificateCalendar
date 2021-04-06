@@ -19,11 +19,27 @@ public class Calendar {
     private final static Logger LOGGER = Logger.getGlobal();
     @GetMapping("/calendar")
     public String calnedar(Model model) throws UnknownHostException {
-
-        String ClientName = Inet4Address.getLocalHost().getHostName();
-        String ClientIP = Inet4Address.getLocalHost().getHostAddress();
-        LOGGER.info("Access Name : "+ClientName);
-        LOGGER.info("Access IP : "+ClientIP);
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+        String ip = request.getHeader("X-FORWARDED-FOR");
+        String ips = request.getLocalAddr();
+        String ipp = Inet4Address.getLocalHost().getHostAddress();
+        if (ip == null) {
+            ip = request.getHeader("PROXY-CLIENT-IP");
+        }
+        if (ip == null) {
+            ip = request.getHeader("WL-PROXY-CLIENT-IP");
+        }
+        if (ip == null) {
+            ip = request.getHeader("HTTP_CLIENT_IP");
+        }
+        if (ip == null) {
+            ip = request.getHeader("HTTP_X_FORWARDED_FOR");
+        }
+        if (ip == null) {
+            ip = request.getRemoteAddr();
+        }
+        LOGGER.info("Access IP : "+ip);
+        LOGGER.info("Access IP : "+ipp);
         return "index";
     }
 

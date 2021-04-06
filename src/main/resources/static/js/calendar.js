@@ -138,17 +138,17 @@ const init = {
             }else if(subtitle)
             {
                 if(subtitle.includes("필기시험 원서접수")>0)
-                    $('#'+ele).append(`<div class="exam"><span style="background:#a0def0;"><a href=${url} target="_blank" style="color:black;">${title}</a></span></div>`)
+                    $('#'+ele).append(`<div class="exam"><span style="background:#A9E1F1;"><a href=${url} target="_blank" style="color:black;">${title}</a></span></div>`)
                 if(subtitle.includes("면접 시험일자")>0)
-                    $(`#`+ele).append(`<div class="exam" ><span style="background:#C9C939;"><a href=${url} target="_blank" style="color:black;">${title}</a></span></div>`)
+                    $(`#`+ele).append(`<div class="exam" ><span style="background:#CECE4C;"><a href=${url} target="_blank" style="color:black;">${title}</a></span></div>`)
                 if(subtitle.includes("면접 시험 원서접수")>0)
                     $(`#`+ele).append(`<div class="exam" ><span style="background:#BCDCA0;"><a href=${url} target="_blank" style="color:black;">${title}</a></span></div>`)
                 if(subtitle.includes("필기시험일")>0)
-                    $(`#`+ele).append(`<div class="exam" ><span style="background:#FA6607;"><a href=${url} target="_blank" style="color:white;">${title}</a></span></div>`)
+                    $(`#`+ele).append(`<div class="exam" ><span style="background:#FA751F;"><a href=${url} target="_blank" style="color:black;">${title}</a></span></div>`)
                 if(subtitle.includes("추가")>0)
-                    $(`#`+ele).append(`<div class="exam" ><span style="background:#9080FF;"><a href=${url} target="_blank" style="color:white;">${title}</a></span></div>`)
+                    $(`#`+ele).append(`<div class="exam" ><span style="background:#9B8CFF;"><a href=${url} target="_blank" style="color:black;">${title}</a></span></div>`)
                 if(subtitle.includes("합격")>0)
-                    $(`#`+ele).append(`<div class="exam" ><span style="background:#FF9C38;"><a href=${url} target="_blank" style="color:white;">${title}</a></span></div>`)
+                    $(`#`+ele).append(`<div class="exam" ><span style="background:#FF9C38;"><a href=${url} target="_blank" style="color:black;">${title}</a></span></div>`)
             }
             else
                 $('#'+ele).append(`<div class="exam"><a href=${url} target="_blank">${title}</a></div>`)
