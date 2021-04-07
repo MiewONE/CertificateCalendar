@@ -31,12 +31,13 @@
                 <br>
                 <div class="searchInput">
                     <span style="font-size:2em;">검색</span>
-                    <input type="text" class="form-control wordSeach" id="basic-url" aria-describedby="basic-addon3" placeholder="단어를 입력하세요.">
+                    <input type="text" class="form-control wordSeach" id="basic-url" aria-describedby="basic-addon3" placeholder="단어를 입력하세요. 정규표현식 가능">
                     <span style="text-align: left;font-size:0.9em">ex) 기사,토익 형식으로 검색하시면 기사와토익을 동시에 검색할수있습니다.</span>
                 </div>
                 <div>
                     <span>색깔 별 의미</span>
                     <ul>
+<!--                        <li><input class="form-check-input Allcheckbox" type="checkbox" value="" id="Allcheck" checked><span>전부 상태반전</span></li>-->
                         <li><input class="form-check-input ViewCondition" type="checkbox" value="" id="DocExamApply" checked><span style="background:#a0def0;">필기시험 원서접수</span></li>
                         <li><input class="form-check-input ViewCondition" type="checkbox" value="" id="pracExamApply" checked><span style="background:#BCDCA0;color:black;">실기(작업)/면접 시험 원서접수</span></li>
                         <li><input class="form-check-input ViewCondition" type="checkbox" value="" id="DocExam" checked><span style="background:#FA6607;color:black;">필기 시험일자</span></li>
@@ -44,6 +45,9 @@
                         <li><input class="form-check-input ViewCondition" type="checkbox" value="" id="AddExamApply" checked><span  style="background:#9080FF;color:black;">추가 원서접수</span></li>
                         <li><input class="form-check-input ViewCondition" type="checkbox" value="" id="PassReport" checked><span style="background:#FF9C38;color:black;">합격자 발표</span></li>
                     </ul>
+                    <div class="btnAlign">
+                        <button id="stateReverse"  type="button" class="btn btn-info">전부 상태반전</button>
+                    </div>
                 </div>
             </div>
             <div id="calendar">

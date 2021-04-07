@@ -148,17 +148,17 @@ const init = {
             }else if(subtitle)
             {
                 if(subtitle.includes("필기시험 원서접수")>0)
-                    $('#'+ele).append(`<div class="exam"><span style="background:#A9E1F1;"><a href=${url} target="_blank" style="color:black;">${title}</a></span></div>`)
+                    $('#'+ele).append(`<div class="exam"><span style="background:#A9E1F1;"><a href=${url} target="_blank" >${title}</a></span></div>`)
                 if(subtitle.includes("면접 시험일자")>0)
-                    $(`#`+ele).append(`<div class="exam" ><span style="background:#CECE4C;"><a href=${url} target="_blank" style="color:black;">${title}</a></span></div>`)
+                    $(`#`+ele).append(`<div class="exam" ><span style="background:#CECE4C;"><a href=${url} target="_blank" >${title}</a></span></div>`)
                 if(subtitle.includes("면접 시험 원서접수")>0)
-                    $(`#`+ele).append(`<div class="exam" ><span style="background:#BCDCA0;"><a href=${url} target="_blank" style="color:black;">${title}</a></span></div>`)
+                    $(`#`+ele).append(`<div class="exam" ><span style="background:#BCDCA0;"><a href=${url} target="_blank" >${title}</a></span></div>`)
                 if(subtitle.includes("필기시험일")>0)
-                    $(`#`+ele).append(`<div class="exam" ><span style="background:#FA751F;"><a href=${url} target="_blank" style="color:black;">${title}</a></span></div>`)
+                    $(`#`+ele).append(`<div class="exam" ><span style="background:#FA751F;"><a href=${url} target="_blank" >${title}</a></span></div>`)
                 if(subtitle.includes("추가")>0)
-                    $(`#`+ele).append(`<div class="exam" ><span style="background:#9B8CFF;"><a href=${url} target="_blank" style="color:black;">${title}</a></span></div>`)
+                    $(`#`+ele).append(`<div class="exam" ><span style="background:#9B8CFF;"><a href=${url} target="_blank" >${title}</a></span></div>`)
                 if(subtitle.includes("합격")>0)
-                    $(`#`+ele).append(`<div class="exam" ><span style="background:#FF9C38;"><a href=${url} target="_blank" style="color:black;">${title}</a></span></div>`)
+                    $(`#`+ele).append(`<div class="exam" ><span style="background:#FF9C38;"><a href=${url} target="_blank" >${title}</a></span></div>`)
             }
             else
                 $('#'+ele).append(`<div class="exam"><a href=${url} target="_blank">${title}</a></div>`)
@@ -208,6 +208,55 @@ const init = {
         });
         $('.ViewCondition').on('click',function()
         {
+            checkBoxChange();
+            init.initFn();
+        });
+        $("#stateReverse").on('click',function()
+        {
+            $('.ViewCondition').each(function(index)
+            {
+                const checked = $(this).is(":checked");
+                if(!checked) {
+                    $(this).prop('checked', true)
+                    checkBoxChange();
+                }
+                else {
+                    $(this).prop('checked', false)
+                    checkBoxChange();
+                }
+                init.initFn();
+            })
+        });
+        $('.wordSeach').on('input',function()
+        {
+            if($('.wordSeach').val())
+            {
+                if($('.wordSeach').val().indexOf(',')>1)
+                {
+                    const splitWord = $('.wordSeach').val().split(',');
+                    init.searchConditionInit(rawData,splitWord[0],'description','qnet','merge');
+                    init.searchConditionInit(toeicRawData,splitWord[1],'description','toeic','merge');
+                    init.searchConditionInit(koreaHistoryRawData,splitWord[2],'description','koreaHistory','merge');
+
+                }else
+                {
+                    setTimeout(function(){
+                        init.searchConditionInit(rawData,$('.wordSeach').val(),'description','qnet');
+                        init.searchConditionInit(toeicRawData,$('.wordSeach').val(),'description','toeic');
+                        init.searchConditionInit(koreaHistoryRawData,$('.wordSeach').val(),'description','koreaHistory','merge');
+                    })
+
+                }
+
+            }else
+            {
+                nowData = rawData;
+                toeicData = toeicRawData;
+                koreaHistoryData = koreaHistoryRawData;
+                init.initFn();
+            }
+        })
+        const checkBoxChange = () => {
             if($('#DocExamApply').is(":checked"))
             {
                 nowViewPoint.DocExamApply = true;
@@ -244,52 +293,39 @@ const init = {
             }else{
                 nowViewPoint.PassReport= false;
             }
-            init.initFn();
-        });
-        $('.wordSeach').on('input',function()
-        {
-            if($('.wordSeach').val())
-            {
-                if($('.wordSeach').val().indexOf(',')>1)
-                {
-                    const splitWord = $('.wordSeach').val().split(',');
-
-                    init.searchConditionInit(rawData,splitWord[0],'description','qnet','merge');
-                    init.searchConditionInit(toeicRawData,splitWord[1],'description','toeic','merge');
-                    init.searchConditionInit(koreaHistoryRawData,splitWord[1],'description','koreaHistory','merge');
-
-                }else
-                {
-                    init.searchConditionInit(rawData,$('.wordSeach').val(),'description','qnet');
-                    init.searchConditionInit(toeicRawData,$('.wordSeach').val(),'description','toeic');
-                    init.searchConditionInit(koreaHistoryRawData,$('.wordSeach').val(),'description','koreaHistory','merge');
-                }
-
-            }else
-            {
-                nowData = rawData;
-                toeicData = toeicRawData;
-                koreaHistoryData = koreaHistoryRawData;
-                init.initFn();
-            }
-        })
+        }
 
     },
     searchConditionInit:function(data,conditionWord,filter,title,merge)
     {
-
+        let test =[];
         if(data)
         {
             switch (title)
             {
                 case 'qnet' :
-                    nowData = data.filter(dt => dt[filter].includes(conditionWord)>0);
+                    nowData = [];
+                    // nowData = data.filter(dt => dt[filter].includes(conditionWord)>0);
+                    data.forEach(ele => {
+                        if(ele.description.match(conditionWord))
+                            nowData.push(ele);
+                    })
                     break;
                 case 'toeic' :
-                    toeicData = data.filter(dt => dt[filter].includes(conditionWord)>0);
+                    toeicData = [];
+                    // toeicData = data.filter(dt => dt[filter].includes(conditionWord)>0);
+                    data.forEach(ele => {
+                        if(ele.description.match(conditionWord))
+                            toeicData.push(ele);
+                    })
                     break;
                 case 'koreaHistory' :
-                    koreaHistoryData = data.filter(dt => dt[filter].includes(conditionWord)>0);
+                    koreaHistoryData = [];
+                    data.forEach(ele => {
+                        if(ele.description.match(conditionWord))
+                            koreaHistoryData.push(ele);
+                    })
+                    // koreaHistoryData = data.filter(dt => dt[filter].includes(conditionWord)>0);
             }
             $('.exam').remove();
             init.initFn();
