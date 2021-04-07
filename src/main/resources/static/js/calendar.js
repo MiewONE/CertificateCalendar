@@ -329,9 +329,9 @@ const init = {
             }
             $('.exam').remove();
             init.initFn();
-            init.arrayForiQnet(nowData);
-            init.arrayForiToeic(toeicData);
-            init.arrayforiKoreaHistory(koreaHistoryData);
+            // init.arrayForiQnet(nowData);
+            // init.arrayForiToeic(toeicData);
+            // init.arrayforiKoreaHistory(koreaHistoryData);
         }
     },
     arrayForiQnet : function(elements)
